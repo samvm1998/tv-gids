@@ -119,5 +119,37 @@
     <footer>
         <p>&copy; 2025 TV Gids - Alle rechten voorbehouden.</p>
     </footer>
+ <script>
+        // Voorbeeld VTM API (vervang met echte URL als deze beschikbaar is)
+        const apiUrl = 'https://api.vtm.be/programming-schedule'; // Placeholder URL
+
+        async function fetchPrograms() {
+            try {
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+
+                const tableBody = document.getElementById('program-table-body');
+                tableBody.innerHTML = ''; // Leeg de tabel voor nieuwe data
+
+                data.programs.forEach(program => {
+                    const row = document.createElement('tr');
+
+                    row.innerHTML = `
+                        <td>${program.title}</td>
+                        <td>${program.channel}</td>
+                        <td>${program.start_time}</td>
+                        <td><a href="${program.stream_url}" target="_blank">Bekijk</a></td>
+                    `;
+
+                    tableBody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Er is een fout opgetreden bij het ophalen van programma\'s:', error);
+            }
+        }
+
+        // Roep de functie aan zodra de pagina laadt
+        window.onload = fetchPrograms;
+    </script>
 </body>
 </html>
