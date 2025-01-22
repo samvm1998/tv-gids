@@ -9,7 +9,6 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
         }
 
         header {
@@ -23,53 +22,29 @@
             padding: 1rem;
         }
 
-        .filter-bar {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 1rem;
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
         }
 
-        .filter-bar select, .filter-bar input {
-            padding: 0.5rem;
-            font-size: 1rem;
-        }
-
-        .program-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-        }
-
-        .program-card {
+        th, td {
             border: 1px solid #ddd;
-            border-radius: 5px;
-            padding: 1rem;
-            background-color: #f9f9f9;
+            padding: 10px;
+            text-align: left;
         }
 
-        .program-card h3 {
-            margin: 0 0 0.5rem 0;
-            font-size: 1.2rem;
+        th {
+            background-color: #f4f4f4;
         }
 
-        .program-card p {
-            margin: 0.5rem 0;
-            font-size: 1rem;
-        }
-
-        .program-card a {
-            display: inline-block;
-            margin-top: 0.5rem;
-            padding: 0.5rem 1rem;
-            color: white;
-            background-color: #007BFF;
+        td a {
+            color: #007BFF;
             text-decoration: none;
-            border-radius: 3px;
-            text-align: center;
         }
 
-        .program-card a:hover {
-            background-color: #0056b3;
+        td a:hover {
+            text-decoration: underline;
         }
 
         footer {
@@ -83,47 +58,33 @@
 <body>
     <header>
         <h1>TV Gids</h1>
-        <p>Vind snel wat er vandaag op TV is!</p>
+        <p>Bekijk wat er nu op TV is!</p>
     </header>
     <main>
-        <div class="filter-bar">
-            <select id="channel-filter">
-                <option value="">Alle Zenders</option>
-                <option value="vtm">VTM</option>
-                <option value="play4">Play4</option>
-                <option value="een">Een</option>
-            </select>
-            <input type="text" id="search-bar" placeholder="Zoek programma...">
-        </div>
-        <div class="program-grid">
-            <div class="program-card">
-                <h3>The Voice</h3>
-                <p>Zender: VTM</p>
-                <p>Tijd: 20:30</p>
-                <a href="https://vtmgo.be" target="_blank">Bekijk</a>
-            </div>
-            <div class="program-card">
-                <h3>De Slimste Mens</h3>
-                <p>Zender: Play4</p>
-                <p>Tijd: 21:00</p>
-                <a href="https://goplay.be" target="_blank">Bekijk</a>
-            </div>
-            <div class="program-card">
-                <h3>Nieuws</h3>
-                <p>Zender: Een</p>
-                <p>Tijd: 19:00</p>
-                <a href="https://www.vrt.be/vrtnu" target="_blank">Bekijk</a>
-            </div>
-        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Programma</th>
+                    <th>Tijd</th>
+                    <th>Stream</th>
+                </tr>
+            </thead>
+            <tbody id="program-table">
+                <tr>
+                    <td colspan="3">Programma's worden geladen...</td>
+                </tr>
+            </tbody>
+        </table>
     </main>
     <footer>
-        <p>&copy; 2025 TV Gids - Alle rechten voorbehouden.</p>
+        <p>&copy; 2025 TV Gids</p>
     </footer>
-     <iframe 
-        src="https://vtm.be/tv-gids" 
+    <iframe 
+        src="https://www.hln.be/tv-gids/?referrer=https%3A%2F%2Fwww.google.com%2F" 
         width="100%" 
         height="800" 
         style="border:none;">
     </iframe>
+
 </body>
 </html>
