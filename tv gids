@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TV Gids</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        header {
+            background-color: #007BFF;
+            color: white;
+            text-align: center;
+            padding: 1rem 0;
+        }
+
+        main {
+            padding: 1rem;
+        }
+
+        .program-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .program-table th, .program-table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+
+        .program-table th {
+            background-color: #f4f4f4;
+        }
+
+        .program-table td a {
+            color: #007BFF;
+            text-decoration: none;
+        }
+
+        .program-table td a:hover {
+            text-decoration: underline;
+        }
+
+        footer {
+            background-color: #f4f4f4;
+            text-align: center;
+            padding: 1rem 0;
+            margin-top: 2rem;
+        }
+
+        @media (max-width: 600px) {
+            .program-table td {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>TV Gids</h1>
+        <p>Overzicht van wat er op TV is vandaag!</p>
+    </header>
+    <main>
+        <table class="program-table">
+            <thead>
+                <tr>
+                    <th>Programma</th>
+                    <th>Zender</th>
+                    <th>Tijd</th>
+                    <th>Stream</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>The Voice</td>
+                    <td>VTM</td>
+                    <td>20:30</td>
+                    <td><a href="https://vtmgo.be" target="_blank">Bekijk</a></td>
+                </tr>
+                <tr>
+                    <td>De Slimste Mens</td>
+                    <td>Play4</td>
+                    <td>21:00</td>
+                    <td><a href="https://goplay.be" target="_blank">Bekijk</a></td>
+                </tr>
+                <tr>
+                    <td>Nieuws</td>
+                    <td>Een</td>
+                    <td>19:00</td>
+                    <td><a href="https://www.vrt.be/vrtnu" target="_blank">Bekijk</a></td>
+                </tr>
+            </tbody>
+        </table>
+    </main>
+    <footer>
+        <p>&copy; 2025 TV Gids - Alle rechten voorbehouden.</p>
+    </footer>
+</body>
+</html>
