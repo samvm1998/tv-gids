@@ -137,6 +137,33 @@
         .today-programs h2 {
             margin-top: 0;
         }
+        .program-actions button {
+            margin-left: 5px;
+            padding: 5px 10px;
+            font-size: 0.9rem;
+        }
+
+        .program-actions button.edit {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+
+        .program-actions button.edit:hover {
+            background-color: #0056b3;
+        }
+
+        .program-actions button.delete {
+            background-color: #FF0000;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+
+        .program-actions button.delete:hover {
+            background-color: #cc0000;
+        }
     </style>
 </head>
 <body>
@@ -203,7 +230,7 @@
 <script>
     const daysOfWeek = ['Ma', 'Di', 'Wo', 'Do', 'Vr', 'Za', 'Zo'];
 
-    function renderCalendar() {
+      function renderCalendar() {
         const calendar = document.getElementById('calendar');
         calendar.innerHTML = '';
         const today = new Date().getDay();
@@ -228,7 +255,11 @@
         document.querySelectorAll('.calendar-day ul').forEach((ul, index) => {
             const dayPrograms = [];
             ul.querySelectorAll('li').forEach(li => {
-                dayPrograms.push(li.textContent);
+                const program = {
+                    text: li.textContent,
+                    date: li.getAttribute('data-date'),
+                };
+                dayPrograms.push(program);
             });
             programs[index + 1] = dayPrograms;
         });
@@ -241,19 +272,56 @@
             const ul = document.getElementById(`day-${day}`);
             savedPrograms[day].forEach(program => {
                 const listItem = document.createElement('li');
-                listItem.textContent = program;
+                listItem.textContent = program.text;
+                listItem.setAttribute('data-date', program.date);
+
+                const actionsDiv = document.createElement('div');
+                actionsDiv.classList.add('program-actions');
+                
+                const editButton = document.createElement('button');
+                editButton.textContent = 'Bewerk';
+                editButton.classList.add('edit');
+                editButton.addEventListener('click', () => editProgram(listItem));
+
+                const deleteButton = document.createElement('button');
+                deleteButton.textContent = 'Wis';
+                deleteButton.classList.add('delete');
+                deleteButton.addEventListener('click', () => deleteProgram(listItem));
+
+                actionsDiv.appendChild(editButton);
+                actionsDiv.appendChild(deleteButton);
+                listItem.appendChild(actionsDiv);
                 ul.appendChild(listItem);
 
                 // Voeg programma toe aan vandaag-sectie als het vandaag is
                 const today = new Date().getDay();
                 if (parseInt(day) === today) {
                     const todayList = document.getElementById('today-list');
-                    const todayItem = document.createElement('li');
-                    todayItem.textContent = program;
+                    const todayItem = listItem.cloneNode(true);
                     todayList.appendChild(todayItem);
                 }
             });
         });
+    }
+
+    function editProgram(listItem) {
+        const form = document.getElementById('agenda-form');
+        const [title, channel, timeRange] = listItem.textContent.split(' ');
+        const [startTime, endTime] = timeRange.split('-');
+        
+        document.getElementById('title').value = title;
+        document.getElementById('channel').value = channel;
+        document.getElementById('start-time').value = startTime;
+        document.getElementById('end-time').value = endTime;
+        toggleForm();
+
+        listItem.remove();
+        savePrograms();
+    }
+
+    function deleteProgram(listItem) {
+        listItem.remove();
+        savePrograms();
     }
 
     document.getElementById('agenda-form').addEventListener('submit', function (e) {
@@ -268,6 +336,24 @@
 
         const listItem = document.createElement('li');
         listItem.textContent = `${title} (${channel}) ${startTime}-${endTime}`;
+        listItem.setAttribute('data-date', date.toISOString().split('T')[0]);
+
+        const actionsDiv = document.createElement('div');
+        actionsDiv.classList.add('program-actions');
+
+        const editButton = document.createElement('button');
+        editButton.textContent = 'Bewerk';
+        editButton.classList.add('edit');
+        editButton.addEventListener('click', () => editProgram(listItem));
+
+        const deleteButton = document.createElement('button');
+        deleteButton.textContent = 'Wis';
+        deleteButton.classList.add('delete');
+        deleteButton.addEventListener('click', () => deleteProgram(listItem));
+
+        actionsDiv.appendChild(editButton);
+        actionsDiv.appendChild(deleteButton);
+        listItem.appendChild(actionsDiv);
 
         const ul = document.getElementById(`day-${day}`);
         ul.appendChild(listItem);
@@ -275,8 +361,7 @@
         const today = new Date().getDay();
         if (day === today) {
             const todayList = document.getElementById('today-list');
-            const todayItem = document.createElement('li');
-            todayItem.textContent = `${title} (${channel}) ${startTime}-${endTime}`;
+            const todayItem = listItem.cloneNode(true);
             todayList.appendChild(todayItem);
         }
 
