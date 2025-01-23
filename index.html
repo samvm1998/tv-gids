@@ -216,6 +216,39 @@
         form.classList.toggle('hidden');
     }
 
+    function savePrograms() {
+        const programs = [];
+        document.querySelectorAll('.calendar-day ul').forEach((ul, index) => {
+            const dayPrograms = [];
+            ul.querySelectorAll('li').forEach(li => {
+                dayPrograms.push(li.textContent);
+            });
+            programs.push(dayPrograms);
+        });
+        localStorage.setItem('tvPrograms', JSON.stringify(programs));
+    }
+
+    function loadPrograms() {
+        const savedPrograms = JSON.parse(localStorage.getItem('tvPrograms')) || [];
+        savedPrograms.forEach((dayPrograms, index) => {
+            const ul = document.getElementById(`day-${index + 1}`);
+            dayPrograms.forEach(program => {
+                const listItem = document.createElement('li');
+                listItem.textContent = program;
+                ul.appendChild(listItem);
+
+                // Voeg programma toe aan vandaag-sectie als het vandaag is
+                const today = new Date().getDay();
+                if (index + 1 === today) {
+                    const todayList = document.getElementById('today-list');
+                    const todayItem = document.createElement('li');
+                    todayItem.textContent = program;
+                    todayList.appendChild(todayItem);
+                }
+            });
+        });
+    }
+
     document.getElementById('agenda-form').addEventListener('submit', function (e) {
         e.preventDefault();
 
@@ -236,11 +269,14 @@
         todayItem.textContent = `${title} (${channel}) ${startTime}-${endTime}`;
         todayList.appendChild(todayItem);
 
+        savePrograms();
+
         document.getElementById('agenda-form').reset();
         toggleForm();
     });
 
     renderCalendar();
+    loadPrograms();
 </script>
 </body>
 </html>
