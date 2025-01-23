@@ -38,6 +38,24 @@
             background-color: #f4f4f4;
         }
 
+        header .nav-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        header .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 1rem;
+            padding: 0.5rem 1rem;
+            background-color: #0056b3;
+            border-radius: 5px;
+        }
+
+        header .nav-links a:hover {
+            background-color: #003f7f;
+        }
+
         main {
             padding: 1rem;
         }
@@ -109,6 +127,11 @@
 <body>
     <header>
         <h1>Mijn TV-Gids</h1>
+        <nav class="nav-links">
+            <a href="https://www.youtube.com" target="_blank">YouTube</a>
+            <a href="https://vtmgo.be" target="_blank">VTM GO</a>
+            <a href="https://www.netflix.com" target="_blank">Netflix</a>
+        </nav>
         <button class="add-button" onclick="toggleForm()">+</button>
     </header>
     <main>
