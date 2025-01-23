@@ -122,6 +122,21 @@
             margin: 0 0 5px 0;
             font-size: 1rem;
         }
+
+        .highlight {
+            background-color: #ffeb3b;
+        }
+
+        .today-programs {
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background-color: #f4f4f4;
+            border: 1px solid #ddd;
+        }
+
+        .today-programs h2 {
+            margin-top: 0;
+        }
     </style>
 </head>
 <body>
@@ -135,6 +150,12 @@
         <button class="add-button" onclick="toggleForm()">+</button>
     </header>
     <main>
+        <!-- Vandaag's Programma's -->
+        <section class="today-programs" id="today-programs">
+            <h2>Programma's van Vandaag</h2>
+            <ul id="today-list"></ul>
+        </section>
+
         <!-- Agenda Form -->
         <section class="agenda-container">
             <form id="agenda-form" class="hidden">
@@ -178,9 +199,13 @@
     function renderCalendar() {
         const calendar = document.getElementById('calendar');
         calendar.innerHTML = '';
+        const today = new Date().getDay();
         for (let i = 1; i <= 7; i++) {
             const dayDiv = document.createElement('div');
             dayDiv.classList.add('calendar-day');
+            if (i === today) {
+                dayDiv.classList.add('highlight');
+            }
             dayDiv.innerHTML = `<h3>${daysOfWeek[i - 1]}</h3><ul id="day-${i}"></ul>`;
             calendar.appendChild(dayDiv);
         }
@@ -205,6 +230,11 @@
         const day = new Date().getDay(); // Huidige dag van de week
         const ul = document.getElementById(`day-${day}`);
         ul.appendChild(listItem);
+
+        const todayList = document.getElementById('today-list');
+        const todayItem = document.createElement('li');
+        todayItem.textContent = `${title} (${channel}) ${startTime}-${endTime}`;
+        todayList.appendChild(todayItem);
 
         document.getElementById('agenda-form').reset();
         toggleForm();
