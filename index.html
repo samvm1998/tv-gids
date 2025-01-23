@@ -49,7 +49,11 @@
             margin-top: 1rem;
         }
 
-        .agenda-container, .shortcuts {
+        .agenda-container {
+            margin-top: 2rem;
+        }
+
+        .calendar-container {
             margin-top: 2rem;
         }
 
@@ -79,22 +83,26 @@
             font-size: 1rem;
         }
 
-        .shortcuts button {
-            margin: 5px;
-            padding: 10px 20px;
-            font-size: 1rem;
-            background-color: #007BFF;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-
-        .shortcuts button:hover {
-            background-color: #0056b3;
-        }
-
         .hidden {
             display: none;
+        }
+
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .calendar-day {
+            padding: 10px;
+            border: 1px solid #ddd;
+            background-color: #f9f9f9;
+        }
+
+        .calendar-day h3 {
+            margin: 0 0 5px 0;
+            font-size: 1rem;
         }
     </style>
 </head>
@@ -104,15 +112,8 @@
         <button class="add-button" onclick="toggleForm()">+</button>
     </header>
     <main>
-        <!-- TV Gids IFrame -->
-        <section>
-            <h2>TV Gids</h2>
-            <iframe src="https://www.pickx.be/nl/televisie/tv-gids" title="TV Gids"></iframe>
-        </section>
-
-        <!-- Agenda -->
+        <!-- Agenda Form -->
         <section class="agenda-container">
-            <h2>Agenda</h2>
             <form id="agenda-form" class="hidden">
                 <label>
                     Titel:
@@ -132,32 +133,41 @@
                 </label><br>
                 <button type="submit">Toevoegen</button>
             </form>
-            <table id="agenda-table">
-                <thead>
-                    <tr>
-                        <th>Titel</th>
-                        <th>Zender</th>
-                        <th>Beginuur</th>
-                        <th>Einduur</th>
-                        <th>Duurtijd</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Programma's worden hier dynamisch toegevoegd -->
-                </tbody>
-            </table>
         </section>
 
-        <!-- Snelkoppelingen -->
-        <section class="shortcuts">
-            <h2>Snelkoppelingen</h2>
-            <button onclick="window.open('https://vtmgo.be', '_blank')">VTM GO</button>
-            <button onclick="window.open('https://www.youtube.com', '_blank')">YouTube</button>
-            <button onclick="window.open('https://www.netflix.com', '_blank')">Netflix</button>
+        <!-- Kalender -->
+        <section class="calendar-container">
+            <h2>Mijn Kalender</h2>
+            <div class="calendar" id="calendar">
+                <!-- Dagen worden hier dynamisch toegevoegd -->
+            </div>
+        </section>
+
+        <!-- TV Gids IFrame -->
+        <section>
+            <h2>TV Gids</h2>
+            <iframe src="https://www.pickx.be/nl/televisie/tv-gids" title="TV Gids"></iframe>
         </section>
     </main>
 <script>
-    // Agenda Functionaliteit
+    const daysOfWeek = ['Ma', 'Di', 'Wo', 'Do', 'Vr', 'Za', 'Zo'];
+
+    function renderCalendar() {
+        const calendar = document.getElementById('calendar');
+        calendar.innerHTML = '';
+        for (let i = 1; i <= 7; i++) {
+            const dayDiv = document.createElement('div');
+            dayDiv.classList.add('calendar-day');
+            dayDiv.innerHTML = `<h3>${daysOfWeek[i - 1]}</h3><ul id="day-${i}"></ul>`;
+            calendar.appendChild(dayDiv);
+        }
+    }
+
+    function toggleForm() {
+        const form = document.getElementById('agenda-form');
+        form.classList.toggle('hidden');
+    }
+
     document.getElementById('agenda-form').addEventListener('submit', function (e) {
         e.preventDefault();
 
@@ -166,37 +176,18 @@
         const startTime = document.getElementById('start-time').value;
         const endTime = document.getElementById('end-time').value;
 
-        // Bereken duurtijd
-        const start = new Date(`1970-01-01T${startTime}Z`);
-        const end = new Date(`1970-01-01T${endTime}Z`);
-        const duration = Math.abs((end - start) / 60000); // Duur in minuten
+        const listItem = document.createElement('li');
+        listItem.textContent = `${title} (${channel}) ${startTime}-${endTime}`;
 
-        const durationFormatted = `${Math.floor(duration / 60)}u ${duration % 60}m`;
+        const day = new Date().getDay(); // Huidige dag van de week
+        const ul = document.getElementById(`day-${day}`);
+        ul.appendChild(listItem);
 
-        // Voeg een rij toe aan de tabel
-        const table = document.getElementById('agenda-table').querySelector('tbody');
-        const row = document.createElement('tr');
-
-        row.innerHTML = `
-            <td>${title}</td>
-            <td>${channel}</td>
-            <td>${startTime}</td>
-            <td>${endTime}</td>
-            <td>${durationFormatted}</td>
-        `;
-
-        table.appendChild(row);
-
-        // Maak de form leeg
         document.getElementById('agenda-form').reset();
         toggleForm();
     });
 
-    // Toggle formulier
-    function toggleForm() {
-        const form = document.getElementById('agenda-form');
-        form.classList.toggle('hidden');
-    }
+    renderCalendar();
 </script>
 </body>
 </html>
