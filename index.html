@@ -95,7 +95,7 @@
             margin-bottom: 2rem;
         }
 
-        form input, form button {
+        form input, form button, form select {
             margin: 5px 0;
             padding: 10px;
             font-size: 1rem;
@@ -175,6 +175,10 @@
                     Einduur:
                     <input type="time" id="end-time" required>
                 </label><br>
+                <label>
+                    Datum:
+                    <input type="date" id="date" required>
+                </label><br>
                 <button type="submit">Toevoegen</button>
             </form>
         </section>
@@ -217,29 +221,29 @@
     }
 
     function savePrograms() {
-        const programs = [];
+        const programs = JSON.parse(localStorage.getItem('tvPrograms')) || {};
         document.querySelectorAll('.calendar-day ul').forEach((ul, index) => {
             const dayPrograms = [];
             ul.querySelectorAll('li').forEach(li => {
                 dayPrograms.push(li.textContent);
             });
-            programs.push(dayPrograms);
+            programs[index + 1] = dayPrograms;
         });
         localStorage.setItem('tvPrograms', JSON.stringify(programs));
     }
 
     function loadPrograms() {
-        const savedPrograms = JSON.parse(localStorage.getItem('tvPrograms')) || [];
-        savedPrograms.forEach((dayPrograms, index) => {
-            const ul = document.getElementById(`day-${index + 1}`);
-            dayPrograms.forEach(program => {
+        const savedPrograms = JSON.parse(localStorage.getItem('tvPrograms')) || {};
+        Object.keys(savedPrograms).forEach(day => {
+            const ul = document.getElementById(`day-${day}`);
+            savedPrograms[day].forEach(program => {
                 const listItem = document.createElement('li');
                 listItem.textContent = program;
                 ul.appendChild(listItem);
 
                 // Voeg programma toe aan vandaag-sectie als het vandaag is
                 const today = new Date().getDay();
-                if (index + 1 === today) {
+                if (parseInt(day) === today) {
                     const todayList = document.getElementById('today-list');
                     const todayItem = document.createElement('li');
                     todayItem.textContent = program;
@@ -256,18 +260,22 @@
         const channel = document.getElementById('channel').value;
         const startTime = document.getElementById('start-time').value;
         const endTime = document.getElementById('end-time').value;
+        const date = new Date(document.getElementById('date').value);
+        const day = date.getDay(); // Dag van de week
 
         const listItem = document.createElement('li');
         listItem.textContent = `${title} (${channel}) ${startTime}-${endTime}`;
 
-        const day = new Date().getDay(); // Huidige dag van de week
         const ul = document.getElementById(`day-${day}`);
         ul.appendChild(listItem);
 
-        const todayList = document.getElementById('today-list');
-        const todayItem = document.createElement('li');
-        todayItem.textContent = `${title} (${channel}) ${startTime}-${endTime}`;
-        todayList.appendChild(todayItem);
+        const today = new Date().getDay();
+        if (day === today) {
+            const todayList = document.getElementById('today-list');
+            const todayItem = document.createElement('li');
+            todayItem.textContent = `${title} (${channel}) ${startTime}-${endTime}`;
+            todayList.appendChild(todayItem);
+        }
 
         savePrograms();
 
